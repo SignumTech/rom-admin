@@ -123,12 +123,15 @@ Route::post('/resetPassword', [registerUsersController::class, 'reset_password']
 Route::post('/resendOTP', [registerUsersController::class, 'resendOTP']);
 Route::post('/updateInfo', [registerUsersController::class, 'updateInfo']);
 ////////////////////////////////////Categories//////////////////////////////////////////////////////
+Route::middleware('auth:sanctum')->get('/getNodeCategories', [categoriesController::class, 'getNodeCategories']);
 Route::get('/getMainCategories', [categoriesController::class, 'getMainCategories']);
 Route::middleware('auth:sanctum')->get('/getSubCategories', [categoriesController::class, 'getSubCategories']);
 Route::get('/showSubCategories/{id}', [categoriesController::class, 'showSubCategories']);
 Route::middleware('auth:sanctum')->post('/uploadSubPic', [categoriesController::class, 'uploadSubPic']);
 Route::middleware('auth:sanctum')->get('/chooseSubCategories', [categoriesController::class, 'chooseSubCategories']);
 Route::get('/getCatByName/{name}', [categoriesController::class, 'getCatByName']);
+Route::get('/getImediateSubCat/{id}', [categoriesController::class, 'getImediateSubCat']);
+Route::middleware('auth:sanctum')->post('/makeChild', [categoriesController::class, 'makeChild']);
 ///////////////socialites///////////////////////////////////////////////////////////////////////////
 Route::get('/auth/google/redirect', [socialiteController::class, 'google_redirect']);
  

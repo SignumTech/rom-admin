@@ -5,6 +5,7 @@ import store from './store'
 import adminDash from './components/dashboard/adminDash.vue'
 import categories from './components/categories/categories.vue'
 import products from './components/products/products.vue'
+import newProduct from './components/products/newProduct.vue'
 import addProducts from './components/products/addProduct.vue'
 import editProducts from './components/products/editProduct.vue'
 import orders from './components/orders/orders.vue'
@@ -135,6 +136,13 @@ const routes = [
         props: true
         
     },    
+    {
+        path: '/admin/newProduct',
+        component: newProduct,
+        name: 'NewProduct',
+        props: true
+        
+    },  
     
     
 ]

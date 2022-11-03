@@ -106,7 +106,6 @@ class categoriesController extends Controller
         else
         {
             $category->parent_id = $request->parent_id;
-            $category->cat_image = 'placeholder.jpg';
         }
         $category->save();
 
@@ -162,6 +161,11 @@ class categoriesController extends Controller
         return $categories;
     }
 
+    public function getNodeCategories(){
+        $categories = Category::where('tree_level', 'NODE')->get();
+        return $categories;
+    }
+
     public function uploadSubPic(Request $request){
         $this->validate($request, [
             'photo' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2084',
@@ -206,9 +210,11 @@ class categoriesController extends Controller
         $data = [];
         $index = 0;
         $parents = Category::where('cat_type', 'PARENT')->get();
+        
         foreach($parents as $parent){
-            $data[$index]['parent'] = $parent->cat_name;
-            $data[$index]['children'] = Category::where('parent_id', $parent->id)->get();
+            $data[$index]['id'] = $parent->id;
+            $data[$index]['label'] = $parent->cat_name;
+            $data[$index]['children'] = $this->getChildren($parent);
             $index++;
         }
 
@@ -218,6 +224,47 @@ class categoriesController extends Controller
     public function getCatByName($name){
         $cat = Category::where("cat_name", $name)->first();
         return $cat;
+    }
+
+    public function getChildren($parent){
+        
+        $data = [];
+        $index = 0;
+        $children = Category::where('parent_id', $parent->id)->get();
+        if(count($children) > 0){
+            foreach($children as $child){
+                $data[$index]['id'] = $child->id;
+                $data[$index]['label'] = $child->cat_name;
+                $data[$index]['children'] = $this->getChildren($child);
+                $index++;
+            }
+            return $data;
+        }
+        else{
+            return "";
+        }
+    }
+
+    public function getImediateSubCat($id){
+        $categories = Category::where('parent_id',$id)
+                              ->select('id', 'cat_name', 'cat_image')
+                              ->get();
+        return $categories;
+    }
+
+    public function makeChild(Request $request){
+        $this->validate($request, [
+            "cat_id" => "required",
+            "parent_id" => "required"
+        ]);
+
+        $category = Category::find($request->cat_id);
+        $category->cat_type = "CHILD";
+        $category->parent_id = $request->parent_id;
+        $category->cat_image = 'placeholder.jpg';
+        $category->save();
+
+        return $category;
     }
 
 }
