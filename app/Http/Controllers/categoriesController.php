@@ -182,7 +182,7 @@ class categoriesController extends Controller
             $fileNameToStore = $filename.'_'.time().'.'.$extension;
             //upload Image
             //$thumbnailPath = public_path().'\storage\settings\\';
-            $thumbnailPath = 'C:\wamp64\www\rom\public\storage\settings\\';
+            $thumbnailPath = 'C:\wamp64\www\roadmap\public\storage\settings\\';
             /*$thumbnailImage->resize(null, 320, function ($constraint){
                 $constraint->aspectRatio();
             });*/
