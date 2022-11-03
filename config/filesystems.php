@@ -37,7 +37,7 @@ return [
 
         'public' => [
             'driver' => 'local',
-            'root' => '/home/signumdevcom/rom/storage',
+            'root' => 'https://rom.signumdev.com/',
             'url' => env('APP_URL').'/storage',
             'visibility' => 'public',
         ],
