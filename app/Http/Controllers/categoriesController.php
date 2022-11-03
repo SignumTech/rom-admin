@@ -183,7 +183,7 @@ class categoriesController extends Controller
             //upload Image
             //$thumbnailPath = public_path().'\storage\settings\\';
             //$thumbnailPath = 'C:\wamp64\www\roadmap\public\storage\settings\\';
-            $thumbnailPath = storage_path().'/app/public/settings/';
+            $thumbnailPath = '/home/signumdevcom/rom/storage/app/public/settings/';
             /*$thumbnailImage->resize(null, 320, function ($constraint){
                 $constraint->aspectRatio();
             });*/
