@@ -79675,7 +79675,9 @@ var render = function () {
                       _c("img", {
                         staticClass: "img img-fluid img-thumb cat_img rounded",
                         attrs: {
-                          src: "/storage/settings/" + sc.cat_image,
+                          src:
+                            "https://rom.signumdev.com/storage/settings/" +
+                            sc.cat_image,
                           alt: "",
                         },
                       }),
