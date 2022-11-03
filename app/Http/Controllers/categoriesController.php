@@ -182,8 +182,8 @@ class categoriesController extends Controller
             $fileNameToStore = $filename.'_'.time().'.'.$extension;
             //upload Image
             //$thumbnailPath = public_path().'\storage\settings\\';
-            //$thumbnailPath = 'C:\wamp64\www\roadmap\public\storage\settings\\';
-            $thumbnailPath = '/home/signumdevcom/rom/storage/app/public/settings/';
+            $thumbnailPath = 'C:\wamp64\www\roadmap\public\storage\settings\\';
+            //$thumbnailPath = '/home/signumdevcom/rom/storage/app/public/settings/';
             /*$thumbnailImage->resize(null, 320, function ($constraint){
                 $constraint->aspectRatio();
             });*/

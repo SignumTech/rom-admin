@@ -67,7 +67,7 @@
                             <tr v-for="sc,index in subCategories" :key="sc.id">
                                 <td class="align-middle">{{index+1}}</td>
                                 <td>
-                                    <img :src="`https://rom.signumdev.com/storage/settings/`+sc.cat_image" class="img img-fluid img-thumb cat_img rounded" alt="">
+                                    <img :src="`http://rom/storage/settings/`+sc.cat_image" class="img img-fluid img-thumb cat_img rounded" alt="">
                                     <span @click="addPictureModal(sc.id,sc.cat_image)" class="fa fa-pencil-alt ml-1" style="cursor:pointer"></span>
                                 </td>
                                 <td class="align-middle">{{sc.cat_name}}</td>
