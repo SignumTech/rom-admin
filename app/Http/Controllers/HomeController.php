@@ -25,4 +25,9 @@ class HomeController extends Controller
     {
         return view('home');
     }
+    public function chapaPay()
+    {
+        //var_dump(openssl_get_cert_locations()); die;
+        return view('chapa');
+    }
 }
