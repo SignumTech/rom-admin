@@ -37,6 +37,9 @@ Route::get('/', function () {
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+Route::get('/test', function (Request $request) {
+    dd(public_path());
+});
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get('/chapaPay', [App\Http\Controllers\HomeController::class, 'chapaPay'])->name('chapaPay');
 ///////////////////////////////////resources///////////////////////////////////////////////////////
