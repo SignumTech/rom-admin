@@ -31,12 +31,7 @@
                             </div>
                             <div class="col-md-6">
                                 <label for="">Category</label>
-                                <select required v-model="productIdentity.cat_id" class="form-select" id="">
-                                    <option value=""></option>
-                                    <optgroup v-for="cat in categories" :key="cat.id" :label="cat.parent">
-                                        <option v-for="sub in cat.children" :key="sub.id" :value="sub.id">{{sub.cat_name}}</option>
-                                    </optgroup>
-                                </select>
+                                <treeselect placeholder="Category" required v-model="productIdentity.cat_id" :disable-branch-nodes="true" :multiple="false" :options="categories" />
                             </div>
                             <div class="col-md-6 mt-3">
                                 <label for="">Price</label>
@@ -213,10 +208,13 @@
 </div>
 </template>
 <script>
+import Treeselect from '@riophae/vue-treeselect'
+import '@riophae/vue-treeselect/dist/vue-treeselect.css'
 import PulseLoader from 'vue-spinner/src/PulseLoader.vue'
 import addColorModalVue from './addColorModal.vue';
 export default {
     components:{
+        Treeselect,
         PulseLoader
     },
     props:["type", "item"],
@@ -246,11 +244,11 @@ export default {
             colors:{},
             sizes:{},
             currentColor:'',
-            categories:{},
+            categories:[],
             product_id:1,
             productIdentity:{
                 p_name: "",
-                cat_id: "",
+                cat_id: null,
                 description: "",
                 price: ""
             },
