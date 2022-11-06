@@ -7,6 +7,9 @@ use App\Models\Product;
 use App\Models\Inventory;
 use App\Models\Wishlist;
 use App\Models\Category;
+use App\Models\Size;
+use App\Models\ProductColor;
+use App\Models\ProductImage;
 use Illuminate\Support\Facades\Auth;
 use Image;
 use Storage;
@@ -53,7 +56,6 @@ class productsController extends Controller
         $product->price = $request->price;
         $product->brand_id = $request->brand_id;
         $product->cat_id = $request->cat_id;
-        $product->p_image = json_encode([]);
 
         $product->save();
 
@@ -181,43 +183,54 @@ class productsController extends Controller
     public function uploadProductPic(Request $request){
         $this->validate($request, [
             'photo' => 'required|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2084',
+            'color_id' => 'required',
+            'product_id' => 'required'
         ]);
         //dd($request->cat_id);
         if($request->hasFile('photo')){
             
-            //Get filename with the extention
-            $filenameWithExt = $request->file('photo')->getClientOriginalName();
-            $thumbnailImage = Image::make($request->file('photo'));
+            $fileNameToStore = $this->pictureUpload($request->file('photo'));
             
-            //Get just filename
-            $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
-            //get just ext
-            $extension = $request->file('photo')->getClientOriginalExtension();
-            //Filename to store
-            $fileNameToStore = $filename.'_'.time().'.'.$extension;
-            //upload Image
-            $realPath = 'C:\wamp64\www\roadmap\public\storage\products\\';
-            //$realPath = public_path().'\storage\products\\';
-            //$realPath = storage_path().'/app/public/products/';
-            //$thumbnailPath = public_path().'\storage\productsThumb\\';
-            $thumbnailPath = 'C:\wamp64\www\roadmap\public\storage\productsThumb\\';
-            //$thumbnailPath = storage_path().'/app/public/productsThumb/';
-            $thumbnailImage->save($realPath.$fileNameToStore);
+            $productImage = new ProductImage;
+            $productImage->product_id = $request->product_id;
+            $productImage->color_id = $request->color_id;
+            $productImage->p_image = $fileNameToStore;
+            $productImage->save();
 
-            $thumbnailImage->resize(null, 320, function ($constraint){
-                $constraint->aspectRatio();
-            });
-            $thumbnailImage->save($thumbnailPath.$fileNameToStore);
-            
-            $data = [];
-            $data['fileName'] = $fileNameToStore;
-
-            return $data; 
+            return $productImage;
         }
         else{
             return response(422, "No file");
         }
 
+    }
+
+    public function pictureUpload($photo){
+        //Get filename with the extention
+        $filenameWithExt = $photo->getClientOriginalName();
+        $thumbnailImage = Image::make($photo);
+
+        //Get just filename
+        $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
+        //get just ext
+        $extension = $photo->getClientOriginalExtension();
+        //Filename to store
+        $fileNameToStore = $filename.'_'.time().'.'.$extension;
+        //upload Image
+        $realPath = 'C:\wamp64\www\roadmap\public\storage\products\\';
+        //$realPath = public_path().'\storage\products\\';
+        //$realPath = storage_path().'/app/public/products/';
+        //$thumbnailPath = public_path().'\storage\productsThumb\\';
+        $thumbnailPath = 'C:\wamp64\www\roadmap\public\storage\productsThumb\\';
+        //$thumbnailPath = storage_path().'/app/public/productsThumb/';
+        $thumbnailImage->save($realPath.$fileNameToStore);
+
+        $thumbnailImage->resize(null, 320, function ($constraint){
+            $constraint->aspectRatio();
+        });
+        $thumbnailImage->save($thumbnailPath.$fileNameToStore);
+
+        return $fileNameToStore;
     }
 
     public function updateProductPic(Request $request){
@@ -231,27 +244,7 @@ class productsController extends Controller
         //dd();
         if($request->hasFile('photo')){
             
-            //Get filename with the extention
-            $filenameWithExt = $request->file('photo')->getClientOriginalName();
-            $thumbnailImage = Image::make($request->file('photo'));
-            
-            //Get just filename
-            $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
-            //get just ext
-            $extension = $request->file('photo')->getClientOriginalExtension();
-            //Filename to store
-            $fileNameToStore = $filename.'_'.time().'.'.$extension;
-            //upload Image
-            //$realPath = public_path().'\storage\products\\';
-            $realPath = storage_path().'/app/public/products/';
-            //$thumbnailPath = public_path().'\storage\productsThumb\\';
-            $thumbnailPath = storage_path().'/app/public/productsThumb/';
-            $thumbnailImage->save($realPath.$fileNameToStore);
-
-            $thumbnailImage->resize(null, 320, function ($constraint){
-                $constraint->aspectRatio();
-            });
-            $thumbnailImage->save($thumbnailPath.$fileNameToStore);
+            $fileNameToStore = $this->pictureUpload($request->file('photo'));
             
             array_push($pictures[$request->color],$fileNameToStore);
             $product->p_image = json_encode($pictures);
@@ -343,16 +336,18 @@ class productsController extends Controller
         return $product;
     }
 
-    public function deleteProductImage(Request $request){
-        
-        if(Storage::exists('public/products/'.$request->pic)){
-            Storage::delete('public/products/'.$request->pic);
-            Storage::delete('public/productsThumb/'.$request->pic);
+    public function deleteProductImage($id){
+        $image = ProductImage::find($id);
+        $image->delete();
+        /*if(Storage::exists('public/products/'.$image->p_image)){
+            Storage::delete('public/products/'.$image->p_image);
+            Storage::delete('public/productsThumb/'.$image->p_image);
             return response('successfully deleted', 200);
         }
         else{
             return response('Image doesnt exist', 422);
-        }
+        }*/
+        return $image;
     }
 
     public function getProductsList(){
@@ -645,5 +640,104 @@ class productsController extends Controller
         $data = array_merge($data, $products);
 
         return $data;
+    }
+
+    public function addColor(Request $request){
+        $this->validate($request, [
+            "color" => "required",
+            "product_id" => "required"
+        ]);
+
+        $color = new ProductColor;
+        $color->product_id = $request->product_id;
+        $color->color = $request->color;
+        $color->save();
+
+        return $color;
+    }
+
+    public function addSizes(Request $request){
+        $this->validate($request, [
+            "color_id" => "required",
+            "product_id" => "required",
+            "size" => "required",
+            "quantity" => "required"
+        ]);
+        $sizes = new Size;
+        $sizes->product_id = $request->product_id;
+        $sizes->size = $request->size;
+        $sizes->save();
+
+        $inventory = new Inventory;
+        $inventory->p_id = $request->product_id;
+        $inventory->size_id = $sizes->id;
+        $inventory->color_id = $request->color_id;
+        $inventory->quantity = $request->quantity;
+        $inventory->save();
+
+        return $inventory;
+    }
+
+    public function getColorsData($id){
+        $data = [];
+        $index = 0;
+        $colorsData = ProductColor::where("product_id", $id)->get();
+
+        foreach($colorsData as $cd){
+            $data[$index]['color'] = $cd->color;
+            $data[$index]['id'] = $cd->id;
+            $data[$index]['images'] = ProductImage::where('color_id', $cd->id)
+                                                  ->where('product_id', $id)
+                                                  ->get();
+            $data[$index]['inventory'] = Inventory::join('sizes', 'sizes.id', 'inventories.size_id')
+                                                  ->where('color_id', $cd->id)
+                                                  ->where('p_id', $id)
+                                                  ->select('inventories.id', 'inventories.size_id', 'inventories.quantity', 'sizes.size')
+                                                  ->get();
+            $index++;
+            
+        }
+
+        return $data;
+    }
+
+    public function getPreviewData($id){
+        $data = [];
+        $colorsData = ProductColor::where("product_id", $id)->get();
+        foreach($colorsData as $cd){
+            $data[$cd->color]['images'] = ProductImage::where('color_id', $cd->id)
+                                            ->where('product_id', $id)
+                                            ->select('p_image')
+                                            ->get();
+            $data[$cd->color]['inventory'] = Inventory::join('sizes', 'sizes.id', 'inventories.size_id')
+                                                ->where('color_id', $cd->id)
+                                                ->where('p_id', $id)
+                                                ->get();
+        }
+        return $data;
+    }
+
+    public function editSizes(Request $request, $id){
+        $this->validate($request, [
+            "size" => "required",
+            "quantity" => "required"
+        ]);
+        
+        $sizes = Size::find($request->size_id);
+        $sizes->size = $request->size;
+        $sizes->save();
+
+        $inventory = Inventory::find($id);
+        $inventory->quantity = $request->quantity;
+        $inventory->save();
+
+        return $inventory;
+    }
+
+    public function deleteSize($id){
+        $size = Size::find($id);
+        $size->delete();
+
+        return $size;
     }
 }

@@ -99,7 +99,7 @@ Route::middleware('auth:sanctum')->post('/shipOrder', [ordersController::class, 
 ///////////////////////////////////products/////////////////////////////////////////////////////////
 Route::post('/uploadProductPic', [productsController::class, 'uploadProductPic']);
 Route::post('/updateProductPic', [productsController::class, 'updateProductPic']);
-Route::post('/deleteProductImage', [productsController::class, 'deleteProductImage']);
+Route::delete('/deleteProductImage/{id}', [productsController::class, 'deleteProductImage']);
 Route::post('/insertColors', [productsController::class, 'insertColors']);
 Route::post('/updateColors', [productsController::class, 'updateColors']);
 Route::post('/filterData', [productsController::class, 'filterData']);
@@ -114,6 +114,12 @@ Route::get('/priceRange/{cat_id}', [productsController::class, 'priceRange']);
 Route::put('/toggleFeature/{id}', [productsController::class, 'toggleFeature']);
 Route::get('/getFeatured/{id}', [productsController::class, 'getFeatured']);
 Route::post('/searchItems', [productsController::class, 'searchItems']);
+Route::get('/getColorsData/{id}', [productsController::class, 'getColorsData']);
+Route::get('/getPreviewData/{id}', [productsController::class, 'getPreviewData']);
+Route::post('/addColor', [productsController::class, 'addColor']);
+Route::post('/addSizes', [productsController::class, 'addSizes']);
+Route::put('/editSizes/{id}', [productsController::class, 'editSizes']);
+Route::delete('/deleteSize/{id}', [productsController::class, 'deleteSize']);
 //////////////////////////////////auth//////////////////////////////////////////////////////////////
 Route::post('/registerUser', [registerUsersController::class, 'registerUser']);
 Route::post('/verifyOTP', [registerUsersController::class, 'verifyOTP']);

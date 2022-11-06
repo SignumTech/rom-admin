@@ -7,23 +7,18 @@
 </template>
 <script>
 export default {
-    props:['colorData'],
+    props:['product_id'],
     data(){
         return{
             color:""
         }
     },
     methods:{
-        addColor(){
-            this.colorData.push(
-                {
-                    color:this.color,
-                    price:"",
-                    sizes:[{size:'',quantity:''}],
-                    pictures:[]
-                }
-            );
-            this.$emit('close')
+        async addColor(){
+            await axios.post('/addColor', {color:this.color, product_id:this.product_id})
+            .then( response =>{
+                this.$emit('close')
+            })
         }
     }
 }
