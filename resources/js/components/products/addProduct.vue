@@ -82,7 +82,7 @@
                 <div v-for="(color,index) in colors" :key="index" class="row mx-0 mt-3 mb-5">
                     
                     <div class="col-md-12">
-                        <h6 class="m-0"><strong>Color:  <span class="shadow-sm rounded p-1 text-white" :style="{backgroundColor:color.color}">{{color.color}}</span></strong></h6>
+                        <h6 class="m-0"><strong>Color:  <span class="shadow-sm rounded p-1 text-white" :style="{backgroundColor:color.color}">{{color.color}}</span> <span @click="editColorModal(color)" class="fa fa-edit ms-2"></span><span class="fa fa-trash-alt ms-2"></span></strong></h6>
                     </div>
                     <div class="col-md-4 mt-3 border-end">
                         <div class="row mt-3">
@@ -212,6 +212,7 @@ import PulseLoader from 'vue-spinner/src/PulseLoader.vue'
 import addColorModalVue from './addColorModal.vue';
 import addSizesModalVue from './addSizesModal.vue';
 import editSizeVue from './editSize.vue';
+import editColorModalVue from './editColorModal.vue';
 export default {
     components:{
         Treeselect,
@@ -274,6 +275,14 @@ export default {
         feather.replace();
     },
     methods:{
+        editColorModal(color){
+            this.$modal.show(
+                editColorModalVue,
+                {color:color},
+                {width:"400px",height:"auto"},
+                { "closed" : this.getColors}
+            )
+        },
         async deleteSizes(id){
             var check = confirm("Are you sure you want to delete this size?")
             if(check){

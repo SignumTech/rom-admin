@@ -26,7 +26,7 @@
                 <tbody>
                     <tr v-for="product in products" :key="product.id">
                         <td class="align-middle">
-                            <img :src="`/storage/products/`+JSON.parse(product.p_image).main" class="img img-fluid img-thumb cat_img rounded-1" alt="">
+                            <img :src="`http://rom/storage/products/`+product.p_image" class="img img-fluid img-thumb cat_img rounded-1" alt="">
                         </td>
                         <td class="align-middle">{{product.p_name}}</td>
                         <td class="align-middle">{{product.price}} Birr</td>

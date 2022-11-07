@@ -102,6 +102,7 @@ Route::post('/updateProductPic', [productsController::class, 'updateProductPic']
 Route::delete('/deleteProductImage/{id}', [productsController::class, 'deleteProductImage']);
 Route::post('/insertColors', [productsController::class, 'insertColors']);
 Route::post('/updateColors', [productsController::class, 'updateColors']);
+Route::put('/updateColor/{id}', [productsController::class, 'updateColor']);
 Route::post('/filterData', [productsController::class, 'filterData']);
 Route::get('/getProductsList', [productsController::class, 'getProductsList']);
 Route::get('/getColorInventory/{id}', [productsController::class, 'getColorInventory']);

@@ -354,6 +354,13 @@ class productsController extends Controller
         $products = Product::all();
         foreach($products as $product){
             $product->stock = Inventory::where('p_id', $product->id)->sum('quantity');
+            $images = ProductImage::where('product_id', $product->id)->first();
+            if($images){
+                $product->p_image = $images->p_image;
+            }
+            else{
+                $product->p_image = 'placeholder.jpg';
+            }
         }
 
         return $products;                
@@ -739,5 +746,17 @@ class productsController extends Controller
         $size->delete();
 
         return $size;
+    }
+
+    public function updateColor(Request $request, $id){
+        $this->validate($request, [
+            "color" => "required"
+        ]);
+
+        $color = ProductColor::find($id);
+        $color->color = $request->color;
+        $color->save();
+
+        return $color;
     }
 }
