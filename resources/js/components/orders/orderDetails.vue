@@ -35,17 +35,17 @@
                         </thead>
                         <tbody>
                             <tr v-for="ot in orderItems" :key="ot.id" class="align-middle">
-                                <td class="ps-2 text-center"><img :src="`/storage/productsThumb/`+ot.p_image" class="img img-fluid" style="width:70px;height:auto"></td>
+                                <td class="ps-2 text-center"><img :src="`http://rom/storage/productsThumb/`+ot.item_details.p_image" class="img img-fluid" style="width:70px;height:auto"></td>
                                 <td class="ps-2">
-                                    <h6>{{ot.p_name}}</h6>
+                                    <h6>{{ot.item_details.p_name}}</h6>
                                     <h6>
-                                        <span class="badge rounded-pill px-3"  :style="{backgroundColor:ot.color}">{{ot.color}}</span> / 
-                                        <span class="badge rounded-pill bg-light shadow-sm text-dark px-3 border"><strong>{{ot.size}}</strong></span>
+                                        <span class="badge rounded-pill px-3"  :style="{backgroundColor:ot.item_details.color}">{{ot.item_details.color}}</span> / 
+                                        <span class="badge rounded-pill bg-light shadow-sm text-dark px-3 border"><strong>{{ot.item_details.size}}</strong></span>
                                     </h6>
                                     
                                 </td>
                                 <td class="ps-2 text-center">{{ot.quantity}}</td>
-                                <td class="ps-2 text-center">{{ot.price | numFormat}} ETB</td>
+                                <td class="ps-2 text-center">{{ot.item_details.price | numFormat}} ETB</td>
                                 <td class="ps-2 text-center">{{order.order_status}}</td>
                             </tr>
                         </tbody>
@@ -109,10 +109,10 @@
                 this.loading = true
                 await axios.get('/orders/'+this.$route.params.id)
                 .then( response =>{
-                    this.order = response.data
-                    this.orderItems = JSON.parse(response.data.items)
-                    console.log(response.data.delivery_details)
-                    this.getAddress(response.data.delivery_details)
+                    this.order = response.data.order_details
+                    this.orderItems = response.data.order_items
+                    
+                    this.getAddress(this.order.delivery_details)
                 })
             },
             async getAddress(id){

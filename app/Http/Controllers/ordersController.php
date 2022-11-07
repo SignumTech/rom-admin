@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Order;
 use App\Models\Cart;
+use App\Models\CartItem;
+use App\Models\OrderItem;
 use App\Models\Inventory;
 use DB;
 class ordersController extends Controller
@@ -16,22 +18,7 @@ class ordersController extends Controller
      */
     public function index()
     {
-        $orders = Order::all();
-        $items = 0;
-        
-        foreach($orders as $order){
-            $pic = null;
-            $o_items = json_decode($order->items);
-            foreach($o_items as $ot){
-                $items = $items + $ot->quantity;
-                if($pic == null){
-                    $pic = $ot->p_image;
-                }
-            }
-            $order->no_items = $items;
-            $order->p_image = $pic;
-            $items = 0;
-        }
+        $orders = Order::orderBy("created_at", "DESC")->get();
         return $orders;
     }
 
@@ -61,26 +48,10 @@ class ordersController extends Controller
         try{
             DB::beginTransaction();
             $cart = Cart::find($request->cart_id);
-            $items = json_decode($cart->items);
-            //////////update inventory//////////////////////
-            foreach($items as $item){
-                $inventory = Inventory::where('p_id', $item->p_id)
-                                    ->where('size', $item->size)
-                                    ->where('color', $item->color)
-                                    ->lockForUpdate()->first();
-                if($inventory->quantity < $item->quantity){
-                    return response("Some of the items have been sold out", 422);
-                }
-                else{
-                    $inventory->quantity -= $item->quantity;
-                    $inventory->save();
-                }
-                
-            }
-            
+            $items = CartItem::where('cart_id', $request->cart_id)-get();
+
             ////////////////////////////////////////////////
             $order = new Order;
-            $order->items = json_encode($items);
 
             $latestOrder = Order::orderBy('created_at','DESC')->first();
             if($latestOrder){
@@ -95,6 +66,27 @@ class ordersController extends Controller
             $order->user_id = auth()->user()->id;
             $order->delivery_details = $request->address;
             $order->save();
+            //////////update inventory//////////////////////
+            foreach($items as $item){
+                $inventory = Inventory::where('inventory_id', $item->inventory_id)
+                                    ->lockForUpdate()->first();
+                if($inventory->quantity < $item->quantity){
+                    return response("Some of the items have been sold out", 422);
+                }
+                else{
+                    $inventory->quantity -= $item->quantity;
+                    $inventory->save();
+
+                    $order_items = new OrderItem;
+                    $order_items->order_id = $order->id;
+                    $order_items->inventory_id = $item->inventory_id;
+                    $order_items->quantity = $item->quantity;
+                    $order_items->save();
+                }
+                
+            }
+            
+
 
             $cart->delete();
             DB::commit();
@@ -115,7 +107,26 @@ class ordersController extends Controller
      */
     public function show($id)
     {
-        return Order::find($id);
+        $order = Order::find($id);
+        
+        $order_items = OrderItem::where('order_items.order_id', $id)
+                                ->get();
+        //dd($order_items);
+        foreach($order_items as $item){
+            $item->item_details = Inventory::join('products', 'inventories.p_id', '=', 'products.id')
+                                    ->join('sizes', 'inventories.size_id', '=', 'sizes.id')
+                                    ->join('product_colors', 'inventories.color_id', '=', 'product_colors.id')
+                                    ->join('product_images', 'product_colors.id', '=', 'product_images.color_id')
+                                    ->where('inventories.id', $item->inventory_id)
+                                    ->select('products.p_name', 'product_colors.color', 'sizes.size', 'products.price', 'product_images.p_image')
+                                    ->first();
+            
+        }
+
+        $data = [];
+        $data['order_details'] = $order;
+        $data['order_items'] = $order_items;
+        return $data;
     }
 
     /**

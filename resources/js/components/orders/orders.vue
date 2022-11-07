@@ -27,7 +27,7 @@
     <div v-if="loading" class="col-md-12">
         <div class="bg-white shadow-sm p-5">
             <div class="d-flex justify-content-center align-self-center">
-                <pulse-loader :color="`#BF7F25`" :size="`15px`"></pulse-loader> 
+                <pulse-loader :color="`#011b48`" :size="`15px`"></pulse-loader> 
             </div>            
         </div>
 
@@ -35,22 +35,32 @@
     <div v-if="!loading" class="col-md-12">
         <div class="bg-white shadow-sm p-2">
             
-            <table v-for="order in orders" :key="order.id" class="table table-sm mt-2 table-bordered">
+            <table class="table mt-2">
                     <thead>
-                        <tr>
-                            <th >Order No. {{order.order_no}}</th>
-                            <th colspan="6">Order date. {{order.created_at | moment("ddd, MMM Do YYYY")}}</th>
+                        <tr class="text-center">
+                            <th>Order No</th>
+                            <th>Order date</th>
+                            <th>Total</th>
+                            <th>No. of items</th>
+                            <th>Order Status</th>
+                            <th>Payment Status</th>
+                            <th>Payment Method</th>
+                            <th></th>
                         </tr>                        
                     </thead>
 
                     <tbody>
-                        <tr class="border-bottom text-center align-middle">
+                        <tr v-for="order in orders" :key="order.id" class="border-bottom text-center align-middle">
                             <td>
-                                <img :src="`/storage/products/`+order.p_image" class="img img-fluid" style="width: 60px; height:auto" alt="">
+                                {{order.order_no}}
                             </td>
-                            <td>{{order.no_items}} items</td>
+                            <td>{{order.created_at | moment("ddd, MMM Do YYYY")}}</td>
+                            
                             <td>{{order.total | numFormat}} ETB</td>
+                            <td>{{order.no_items}} items</td>
                             <td>{{order.order_status}}</td>
+                            <td>{{order.payment_status}}</td>
+                            <td>{{order.payment_method}}</td>
                             <td><router-link :to="`/admin/orderDetails/`+order.id">Order Details <span class="fa fa-external-link-alt"></span></router-link></td>
                         </tr>                        
                     </tbody>
@@ -78,6 +88,9 @@ export default {
         this.getAllOrders()
     },
     methods:{
+        connect(){
+
+        },
         async getAllOrders(){
             this.active = 'all'
             this.loading = true
@@ -117,3 +130,4 @@ export default {
     }
 }
 </script>
+        
