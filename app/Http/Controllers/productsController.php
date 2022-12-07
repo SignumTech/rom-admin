@@ -218,12 +218,12 @@ class productsController extends Controller
         $fileNameToStore = $filename.'_'.time().'.'.$extension;
         //upload Image
         //$realPath = 'C:\wamp64\www\roadmap\public\storage\products\\';
-        $realPath = 'https://rom.signumdev.com/storage/products/';
+        $realPath = '/home/signumdevcom/rom/storage/app/public/products/';
         //$realPath = public_path().'\storage\products\\';
         //$realPath = storage_path().'/app/public/products/';
         //$thumbnailPath = public_path().'\storage\productsThumb\\';
         //$thumbnailPath = 'C:\wamp64\www\roadmap\public\storage\productsThumb\\';
-        $thumbnailPath= 'https://rom.signumdev.com/storage/productsThumb/';
+        $thumbnailPath= '/home/signumdevcom/rom/storage/app/public/productsThumb/';
         //$thumbnailPath = storage_path().'/app/public/productsThumb/';
         $thumbnailImage->save($realPath.$fileNameToStore);
 
