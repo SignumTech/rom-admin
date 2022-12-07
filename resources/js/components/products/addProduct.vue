@@ -102,7 +102,7 @@
                             <div v-for="(pic,picIndex) in color.images" :key="`im`+picIndex" class="col-md-3 align-self-center mt-2 ">
                                 <div class="row m-0 show-add-btn">
                                     <div class="col-md-12 px-0">
-                                        <img :src="`http://rom/storage/productsThumb/`+pic.p_image" class="img img-fluid" alt="">
+                                        <img :src="`https://rom.signumdev.com/storage/products/`+pic.p_image" class="img img-fluid" alt="">
                                     </div>
                                     <div class="col-md-12 text-center">
                                         <span class="add-cart">
@@ -150,7 +150,7 @@
                     <div class="col-md-1 p-0">
                         <div v-for="(pic) in previewData[currentColor].images" :key="pic" class="row show-add-btn">
                             <div class="col-md-12">
-                                <img class="img img-fluid mt-2" :src="`http://rom/storage/productsThumb/`+pic.p_image" alt="">
+                                <img class="img img-fluid mt-2" :src="`https://rom.signumdev.com/storage/products/`+pic.p_image" alt="">
                             </div>
                         </div>                  
                     </div>
