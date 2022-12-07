@@ -157,7 +157,7 @@
                     <div class="col-md-5">
                         <div class="row">
                             <div class="col-md-12">
-                                <img class="img img-fluid mt-2" :src="`http://rom/storage/products/`+previewData[currentColor].images[0].p_image" alt="">
+                                <img class="img img-fluid mt-2" :src="`https://rom.signumdev.com/storage/products/`+previewData[currentColor].images[0].p_image" alt="">
                             </div>
                         </div>
                     </div>
