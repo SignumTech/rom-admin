@@ -19,6 +19,9 @@
                     <input v-model="formData.cat_name" type="text" class="form-control" required placeholder="Category Name">
                 </div>
                 <div class="col-md-12 mt-3">
+                    <input type="text">
+                </div>
+                <div class="col-md-12 mt-3">
                     <button v-if="type=='add'"  type="submit" class="btn btn-primary form-control"><span class="fa fa-plus"></span> Add</button>
                 </div>            
             </form>
