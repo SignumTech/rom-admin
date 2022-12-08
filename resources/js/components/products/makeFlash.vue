@@ -5,7 +5,7 @@
                 <h5 class="text-center">Add to a flash sale</h5>
             </div><hr>
             <div class="col-md-3">
-                <img class="img img-fluid" :src="`/storage/products/`+JSON.parse(product.p_image).main" alt="">
+                <img class="img img-fluid" :src="`/storage/products/`+product.p_image" alt="">
             </div>
             <div class="col-md-8">
                 <h6>{{product.p_name}}</h6>
