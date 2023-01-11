@@ -19,6 +19,7 @@ class ordersController extends Controller
     public function index()
     {
         $orders = Order::orderBy("created_at", "DESC")->get();
+        $orders = $this->addItemQuantity($orders);
         return $orders;
     }
 
@@ -180,63 +181,30 @@ class ordersController extends Controller
         return $order;
     }
 
+    public function addItemQuantity($orders){
+        foreach($orders as $order){
+            $order->no_items = OrderItem::where('order_id', $order->id)->count();
+        }
+        return $orders;
+    }
+
     public function getProcessing(){
         $orders = Order::where('order_status', 'PROCESSING')->get();
-        $items = 0;
+        $orders = $this->addItemQuantity($orders);
+
         
-        foreach($orders as $order){
-            $pic = null;
-            $o_items = json_decode($order->items);
-            foreach($o_items as $ot){
-                $items = $items + $ot->quantity;
-                if($pic == null){
-                    $pic = $ot->p_image;
-                }
-            }
-            $order->no_items = $items;
-            $order->p_image = $pic;
-            $items = 0;
-        }
         return $orders;
     }
 
     public function getShipped(){
         $orders = Order::where('order_status', 'SHIPPED')->get();
-        $items = 0;
-        
-        foreach($orders as $order){
-            $pic = null;
-            $o_items = json_decode($order->items);
-            foreach($o_items as $ot){
-                $items = $items + $ot->quantity;
-                if($pic == null){
-                    $pic = $ot->p_image;
-                }
-            }
-            $order->no_items = $items;
-            $order->p_image = $pic;
-            $items = 0;
-        }
+        $orders = $this->addItemQuantity($orders);
         return $orders;
     }
 
     public function getDelivered(){
         $orders = Order::where('order_status', 'DELIVERED')->get();
-        $items = 0;
-        
-        foreach($orders as $order){
-            $pic = null;
-            $o_items = json_decode($order->items);
-            foreach($o_items as $ot){
-                $items = $items + $ot->quantity;
-                if($pic == null){
-                    $pic = $ot->p_image;
-                }
-            }
-            $order->no_items = $items;
-            $order->p_image = $pic;
-            $items = 0;
-        }
+        $orders = $this->addItemQuantity($orders);
         return $orders;
     }
 
